@@ -70,3 +70,4 @@ All settings centralized in `config.py` with defaults:
 - Max search results: 5
 - Embedding model: "all-MiniLM-L6-v2"
 - Claude model: "claude-sonnet-4-20250514"
+- do not rerun the server after each edit
