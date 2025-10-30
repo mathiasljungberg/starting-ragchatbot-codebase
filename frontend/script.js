@@ -5,7 +5,7 @@ const API_URL = '/api';
 let currentSessionId = null;
 
 // DOM elements
-let chatMessages, chatInput, sendButton, clearChatButton, totalCourses, courseTitles;
+let chatMessages, chatInput, sendButton, clearChatButton, refreshDataButton, totalCourses, courseTitles;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,9 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput = document.getElementById('chatInput');
     sendButton = document.getElementById('sendButton');
     clearChatButton = document.getElementById('clearChatButton');
+    refreshDataButton = document.getElementById('refreshDataButton');
     totalCourses = document.getElementById('totalCourses');
     courseTitles = document.getElementById('courseTitles');
-    
+
     setupEventListeners();
     createNewSession();
     loadCourseStats();
@@ -32,6 +33,9 @@ function setupEventListeners() {
 
     // Clear chat button
     clearChatButton.addEventListener('click', createNewSession);
+
+    // Refresh data button
+    refreshDataButton.addEventListener('click', refreshData);
 
     // Suggested questions
     document.querySelectorAll('.suggested-item').forEach(button => {
@@ -169,15 +173,15 @@ async function loadCourseStats() {
         console.log('Loading course stats...');
         const response = await fetch(`${API_URL}/courses`);
         if (!response.ok) throw new Error('Failed to load course stats');
-        
+
         const data = await response.json();
         console.log('Course data received:', data);
-        
+
         // Update stats in UI
         if (totalCourses) {
             totalCourses.textContent = data.total_courses;
         }
-        
+
         // Update course titles
         if (courseTitles) {
             if (data.course_titles && data.course_titles.length > 0) {
@@ -188,7 +192,7 @@ async function loadCourseStats() {
                 courseTitles.innerHTML = '<span class="no-courses">No courses available</span>';
             }
         }
-        
+
     } catch (error) {
         console.error('Error loading course stats:', error);
         // Set default values on error
@@ -198,5 +202,33 @@ async function loadCourseStats() {
         if (courseTitles) {
             courseTitles.innerHTML = '<span class="error">Failed to load courses</span>';
         }
+    }
+}
+
+// Refresh data function
+async function refreshData() {
+    // Add loading state
+    refreshDataButton.classList.add('loading');
+    refreshDataButton.disabled = true;
+
+    // Show loading in course stats
+    if (courseTitles) {
+        courseTitles.innerHTML = '<span class="loading">Refreshing...</span>';
+    }
+
+    try {
+        // Reload course statistics
+        await loadCourseStats();
+
+        // Optional: Add a success message in chat
+        addMessage('Course data refreshed successfully!', 'assistant');
+
+    } catch (error) {
+        console.error('Error refreshing data:', error);
+        addMessage('Failed to refresh data. Please try again.', 'assistant');
+    } finally {
+        // Remove loading state
+        refreshDataButton.classList.remove('loading');
+        refreshDataButton.disabled = false;
     }
 }

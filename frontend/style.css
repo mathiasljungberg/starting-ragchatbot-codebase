@@ -735,6 +735,63 @@ details[open] .suggested-header::before {
     height: 16px;
 }
 
+/* Refresh Data Button */
+.refresh-data-btn {
+    width: 100%;
+    padding: 0.5rem 0;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    margin-top: 0.5rem;
+}
+
+.refresh-data-btn:focus {
+    outline: none;
+    color: var(--primary-color);
+}
+
+.refresh-data-btn:hover {
+    color: var(--primary-color);
+}
+
+.refresh-data-btn:hover svg {
+    transform: rotate(180deg);
+}
+
+.refresh-data-btn:active {
+    color: var(--primary-color);
+}
+
+.refresh-data-btn svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.refresh-data-btn.loading svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-content {
